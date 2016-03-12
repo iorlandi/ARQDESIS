@@ -1,0 +1,165 @@
+-- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
+--
+-- Host: localhost    Database: bd2msin
+-- ------------------------------------------------------
+-- Server version	5.6.26-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `aluno`
+--
+
+DROP TABLE IF EXISTS `aluno`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `aluno` (
+  `IdAluno` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `IdEndereco` int(10) unsigned NOT NULL,
+  `Nome` varchar(100) NOT NULL,
+  `Email` varchar(100) NOT NULL,
+  `Rg` varchar(100) NOT NULL,
+  `Cpf` varchar(100) NOT NULL,
+  `Telefone` varchar(100) NOT NULL,
+  PRIMARY KEY (`IdAluno`),
+  KEY `Aluno_Endereco` (`IdEndereco`),
+  CONSTRAINT `Aluno_Endereco` FOREIGN KEY (`IdEndereco`) REFERENCES `endereco` (`IdEndereco`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `arte`
+--
+
+DROP TABLE IF EXISTS `arte`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `arte` (
+  `IdArte` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `DescricaoMaterial` varchar(200) NOT NULL,
+  `Livro` varchar(200) NOT NULL,
+  `IdCurso` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`IdArte`),
+  KEY `Arte_Curso` (`IdCurso`),
+  CONSTRAINT `Arte_Curso` FOREIGN KEY (`IdCurso`) REFERENCES `curso` (`IdCurso`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `curso`
+--
+
+DROP TABLE IF EXISTS `curso`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `curso` (
+  `IdCurso` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Nome` varchar(200) NOT NULL,
+  `Horario` time DEFAULT NULL,
+  `DataInicial` date NOT NULL,
+  `DataFinal` date DEFAULT NULL,
+  `QuantidadeVaga` int(11) DEFAULT NULL,
+  `Valor` float NOT NULL,
+  PRIMARY KEY (`IdCurso`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `endereco`
+--
+
+DROP TABLE IF EXISTS `endereco`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `endereco` (
+  `IdEndereco` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Logradouro` varchar(50) NOT NULL,
+  `Cep` varchar(50) NOT NULL,
+  `Bairro` varchar(50) NOT NULL,
+  PRIMARY KEY (`IdEndereco`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `informatica`
+--
+
+DROP TABLE IF EXISTS `informatica`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `informatica` (
+  `IdInformatica` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `Software` varchar(50) DEFAULT NULL,
+  `Laboratorio` varchar(50) NOT NULL,
+  `IdCurso` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`IdInformatica`),
+  KEY `Informatica_Curso` (`IdCurso`),
+  CONSTRAINT `Informatica_Curso` FOREIGN KEY (`IdCurso`) REFERENCES `curso` (`IdCurso`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `itemcadastro`
+--
+
+DROP TABLE IF EXISTS `itemcadastro`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `itemcadastro` (
+  `IdCurso` int(10) unsigned NOT NULL,
+  `IdMatricula` int(10) unsigned NOT NULL,
+  `DataCadastro` date DEFAULT NULL,
+  KEY `ItemCadastro_Curso` (`IdCurso`),
+  KEY `ItemCadastro_Matricula` (`IdMatricula`),
+  CONSTRAINT `ItemCadastro_Curso` FOREIGN KEY (`IdCurso`) REFERENCES `curso` (`IdCurso`),
+  CONSTRAINT `ItemCadastro_Matricula` FOREIGN KEY (`IdMatricula`) REFERENCES `matricula` (`IdMatricula`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `matricula`
+--
+
+DROP TABLE IF EXISTS `matricula`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `matricula` (
+  `IdMatricula` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `IdAluno` int(10) unsigned NOT NULL,
+  `ValorMatricula` float NOT NULL,
+  `DataMatricula` datetime NOT NULL,
+  `FlgPagamento` bit(1) NOT NULL,
+  `FlgMatricula` bit(1) NOT NULL,
+  PRIMARY KEY (`IdMatricula`),
+  KEY `Matricula_Aluno` (`IdAluno`),
+  CONSTRAINT `Matricula_Aluno` FOREIGN KEY (`IdAluno`) REFERENCES `aluno` (`IdAluno`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping events for database 'bd2msin'
+--
+
+--
+-- Dumping routines for database 'bd2msin'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2015-10-23 12:57:36
